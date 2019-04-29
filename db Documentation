@@ -1,0 +1,23 @@
+get_emp_role(Employee_id) -- get employees role using id.
+
+add_employee(("id"
+	"first_name"	
+	"last_name"	
+	"password"
+	"salt"	
+	"department"	
+	"mobile_number"	
+	"extension_number"	
+	"worker_type"	
+	"role"	
+	"blue_badge"	
+	"post_code"	
+	"parking_authorised"	
+	"parking_badge_colour")) -- takes tuple argument and creates new employee in employee table
+
+
+def get_emp_ALL(employee_id) -- returns entire employee row as a tuple 
+
+def get_emp_password(employee_id) -- returns password of given user
+       
+	
