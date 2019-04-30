@@ -7,8 +7,9 @@ class Connect_db:
         if not (f_path.endswith(".db")):
             print("file was not .db file")
             f_path ="new.db"
+
          
-         
+        self.role_dict = {"employee":1,"manager":2,"facilitator":4,"admin":8}
         self.connection = sqlite3.connect(f_path)
         self.curs = self.connection.cursor()
     
@@ -34,6 +35,16 @@ class Connect_db:
         self.curs.execute("INSERT INTO employee VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",values)
         self.connection.commit()
         print("Employee Added")
+
+    def set_emp_password(self,employee_id,password_str):
+        row = "password"
+        query = "UPDATE employee SET password=? WHERE id=?"
+
+        self.curs.execute(query,(password_str,employee_id,))
+        self.connection.commit();
+
+
+    
     
     def get_emp_ALL(self,employee_id):
         query = "select * from employee where id=?"
@@ -46,6 +57,28 @@ class Connect_db:
         self.curs.execute(query,(employee_id,))
         result = self.curs.fetchone()
         return result[0]
+
+    
+    
+    def isRole(self,role_name,employee_id):
+        
+
+        if role_name in self.role_dict:
+            if self.get_emp_role(employee_id) & self.role_dict[role_name]:
+                return True
+            else:
+                return False
+        return False
+
+    def listRoles(self,users_role):
+        roles_list = list()
+        for role, flag in self.role_dict.items():
+            if flag & users_role:
+                roles_list.append(role)
+        
+        return roles_list
+
+
 
 
     

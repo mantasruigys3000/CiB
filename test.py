@@ -6,7 +6,3 @@ database = db.Connect_db("final.db")
 
 print(database.get_emp_password(1))
 
-
-
-
-
