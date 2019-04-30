@@ -19,5 +19,6 @@ add_employee(("id"
 def get_emp_ALL(employee_id) -- returns entire employee row as a tuple 
 
 def get_emp_password(employee_id) -- returns password of given user
-       
+
+def set_emp_password(employee_id,password_str): - employee id and string to change password too
 	
