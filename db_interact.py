@@ -60,6 +60,11 @@ class Connect_db:
         result = self.curs.fetchone()
         return result[0]
 
+        
+    def convert_datetime(self,date):
+            print(date)
+
+            
     def get_parking_for_emp(self,employee_id,start_time,end_time):
         obj_start_time = datetime.strptime(start_time,self.time_format)
         #print(obj_start_time)
@@ -81,21 +86,29 @@ class Connect_db:
             print(j)
             self.curs.execute(query,(j,))
             new_dates = self.curs.fetchone()
+            print(new_dates)
             new_start = datetime.strptime(new_dates[0],self.time_format)
             new_end = datetime.strptime(new_dates[1],self.time_format)
 
             new_tup = (new_start,new_end)
-            
+            self.convert_datetime(new_dates[0].split("-"))
+            dates.append(new_tup)
             
         print(dates)
 
         query = "SELECT total_spaces FROM department_parking WHERE department_number=?"
         self.curs.execute(query,(dept,))
-        total_spaces = self.curs.fetchone()
+        total_spaces = self.curs.fetchone()[0]
+
+        for d in dates:
+            if not ((obj_start_time >= d[1]) or (obj_end_time <= d[0])):
+                total_spaces-=1
 
 
 
-        print(total_spaces)
+        return total_spaces
+
+        
 
 
     
