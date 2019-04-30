@@ -1,4 +1,6 @@
 import sqlite3
+from datetime import datetime
+
 
 
 class Connect_db:
@@ -8,7 +10,7 @@ class Connect_db:
             print("file was not .db file")
             f_path ="new.db"
 
-         
+        self.time_format = "%Y-%m-%d %H:%M"
         self.role_dict = {"employee":1,"manager":2,"facilitator":4,"admin":8}
         self.connection = sqlite3.connect(f_path)
         self.curs = self.connection.cursor()
@@ -57,6 +59,44 @@ class Connect_db:
         self.curs.execute(query,(employee_id,))
         result = self.curs.fetchone()
         return result[0]
+
+    def get_parking_for_emp(self,employee_id,start_time,end_time):
+        obj_start_time = datetime.strptime(start_time,self.time_format)
+        #print(obj_start_time)
+        obj_end_time = datetime.strptime(end_time,self.time_format)
+
+        query = "SELECT department FROM employee WHERE id=?"
+        self.curs.execute(query,(employee_id,))
+        dept = self.curs.fetchone()[0]
+
+        query = "SELECT id FROM employee where department=?"
+        self.curs.execute(query,(dept,))
+        all_emp = self.curs.fetchall()
+
+        dates = []
+        print(all_emp)
+        query = "SELECT datetime_start, datetime_end From employee_timetable where employee_id=?"
+        for i in all_emp:
+            j = i[0]
+            print(j)
+            self.curs.execute(query,(j,))
+            new_dates = self.curs.fetchone()
+            new_start = datetime.strptime(new_dates[0],self.time_format)
+            new_end = datetime.strptime(new_dates[1],self.time_format)
+
+            new_tup = (new_start,new_end)
+            
+            
+        print(dates)
+
+        query = "SELECT total_spaces FROM department_parking WHERE department_number=?"
+        self.curs.execute(query,(dept,))
+        total_spaces = self.curs.fetchone()
+
+
+
+        print(total_spaces)
+
 
     
     
