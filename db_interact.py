@@ -177,17 +177,33 @@ class Connect_db:
         col = self.curs.fetchone()[0]
         print(col)
         # Get weeks commencing
-        self.curs.execute("SELECT week_commencing FROM park_and_ride_dates WHERE colour=?",(col,))
-        weeks = self.curs.fetchall()[0]
+        self.curs.execute("SELECT date FROM badge_dates WHERE colour=?",(col,))
+        weeks = self.curs.fetchall()
 
         for week in weeks:
-            week_start = datetime.strptime(week,"%d-%m-%Y")
+            week_start = datetime.strptime(week[0],"%d-%m-%Y %H:%M")
             week_end = week_start + dt.timedelta(days=7)
 
-            if(start_time > week_start and end_time < week_end):
+            if(start_time >= week_start and end_time <= week_end):
                 return True
 
         return False
+
+    def emp_book_week(self,e_id,wk):
+        return
+
+
+    def get_roles(self):
+        self.curs.execute("SELECT * FROM roles")
+        tbl = self.curs.fetchall()
+        dic = {}
+
+        for tup in tbl:
+            dic[tup[1]] = tup[0]
+
+        return dic
+        
+
 
 
         
