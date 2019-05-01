@@ -153,7 +153,20 @@ class Connect_db:
         tup = self.curs.fetchall()
         print(tup)
 
-    
+    def add_booking(self,values = ()):
+        l = list(values)
+        l.append("None")
+        tup = tuple(l)
+
+        self.curs.execute("INSERT INTO employee_timetable VALUES (?,?,?,?)",tup)
+        print("Booking created")
+        self.connection.commit()
+
+    def emp_assign_colour(self,e_id,colour):
+        self.curs.execute("UPDATE employee SET parking_badge_colour=? WHERE id=?",(colour,e_id,))
+        print("Colour Set")
+        self.connection.commit()
+        
     
     def isRole(self,role_name,employee_id):
         
