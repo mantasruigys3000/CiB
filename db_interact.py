@@ -83,9 +83,16 @@ class Connect_db:
 
             
     def get_parking_for_emp(self,employee_id,start_time,end_time):
-        obj_start_time = datetime.strptime(start_time,self.time_format)
+
+        if not isinstance(start_time,datetime):
+            obj_start_time = datetime.strptime(start_time,self.time_format)
+        else:
+             obj_start_time = start_time
         #print(obj_start_time)
-        obj_end_time = datetime.strptime(end_time,self.time_format)
+        if not isinstance(end_time,datetime):
+            obj_end_time = datetime.strptime(end_time,self.time_format)
+        else:
+            obj_end_time = end_time
 
         query = "SELECT department FROM employee WHERE id=?"
         self.curs.execute(query,(employee_id,))
@@ -104,8 +111,8 @@ class Connect_db:
             self.curs.execute(query,(j,))
             new_dates = self.curs.fetchone()
             print(new_dates)
-            new_start = datetime.strptime(new_dates[0],self.time_format)
-            new_end = datetime.strptime(new_dates[1],self.time_format)
+            new_start = datetime.strptime(new_dates[0],"%d-%m-%Y %H:%M")
+            new_end = datetime.strptime(new_dates[1],"%d-%m-%Y %H:%M")
 
             new_tup = (new_start,new_end)
             self.convert_datetime(new_dates[0].split("-"))
@@ -189,20 +196,54 @@ class Connect_db:
 
         return False
 
-    def emp_book_week(self,e_id,wk):
-        return
+    def emp_book_week(self,e_id,wk,times = []):
+        wk += '-1'
+        wk += ' 00:00'
+        print(times)
+        week = datetime.strptime(wk,"%Y-W%W-%w %H:%M")
+        
+
+        for l in range(len(times[0])):
+            start_minutes = datetime.strptime(times[0][l],"%H:%M")
+            end_minutes = datetime.strptime(times[1][l],"%H:%M")
+
+            current_week = week + dt.timedelta(days=l)
+
+            start_time = current_week + dt.timedelta(minutes=start_minutes.minute,hours=start_minutes.hour)
+            end_time = current_week + dt.timedelta(minutes=end_minutes.minute,hours=end_minutes.hour)
+
+            
+            if self.get_colour_valid(e_id,start_time,end_time):
+                if (self.get_parking_for_emp(e_id,start_time,end_time) > 0):
+                    self.add_booking((e_id,start_time,end_time))
+                else:
+                    print("Could not make booking not enough space")
+            else:
+                print("Invalid Week")
 
 
     def get_roles(self):
-        self.curs.execute("SELECT * FROM roles")
-        tbl = self.curs.fetchall()
-        dic = {}
+            self.curs.execute("SELECT * FROM roles")
+            tbl = self.curs.fetchall()
+            dic = {}
 
-        for tup in tbl:
-            dic[tup[1]] = tup[0]
+            for tup in tbl:
+                dic[tup[1]] = tup[0]
 
-        return dic
+            return dic
+
+    
+
+
+
+
+
+
         
+
+
+        
+
 
 
 
