@@ -1,4 +1,5 @@
 import sqlite3
+import datetime as dt
 from datetime import datetime
 
 
@@ -11,6 +12,7 @@ class Connect_db:
             f_path ="new.db"
 
         self.time_format = "%Y-%m-%d %H:%M"
+        self.week_format = "%Y-%m-%d"
         self.role_dict = {"employee":1,"manager":2,"facilitator":4,"admin":8}
         self.connection = sqlite3.connect(f_path)
         self.curs = self.connection.cursor()
@@ -166,7 +168,33 @@ class Connect_db:
         self.curs.execute("UPDATE employee SET parking_badge_colour=? WHERE id=?",(colour,e_id,))
         print("Colour Set")
         self.connection.commit()
+
+
+    def get_colour_valid(self,e_id,start_time,end_time):
+
+        #get colour
+        self.curs.execute("SELECT parking_badge_colour FROM employee where id=?",(e_id,))
+        col = self.curs.fetchone()[0]
+        print(col)
+        # Get weeks commencing
+        self.curs.execute("SELECT week_commencing FROM park_and_ride_dates WHERE colour=?",(col,))
+        weeks = self.curs.fetchall()[0]
+
+        for week in weeks:
+            week_start = datetime.strptime(week,"%d-%m-%Y")
+            week_end = week_start + dt.timedelta(days=7)
+
+            if(start_time > week_start and end_time < week_end):
+                return True
+
+        return False
+
+
         
+
+
+
+
     
     def isRole(self,role_name,employee_id):
         
