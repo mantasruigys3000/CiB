@@ -43,10 +43,13 @@ class Connect_db:
             return
         e_id = values[0]
 
+        self.curs.execute("DELETE FROM employee WHERE id=?",(e_id,))
         
+        self.add_employee(values)
 
         #self.curs.execute(query,values)
-        #self.connection.commit()
+        self.connection.commit()
+        print("employee updated")
         
         
 
@@ -133,6 +136,22 @@ class Connect_db:
     def get_session_by_ip_token(self,ip,token):
         self.curs.execute("SELECT * From session WHERE ip_address=? AND token=?",(ip,token,))
         return self.curs.fetchone()
+
+    
+    def add_vehicle(self,values = ()):
+        self.curs.execute("INSERT INTO vehicle VALUES (?,?,?,?)",values)
+        self.connection.commit()
+
+    def delete_vehicle(self,v_reg):
+
+        self.curs.execute("DELETE FROM vehicle WHERE registration=?",(v_reg,))
+        print("vehicle deleted")
+        self.connection.commit()
+
+    def get_vehicles(self):
+        self.curs.execute("SELECT * FROM vehicle")
+        tup = self.curs.fetchall()
+        print(tup)
 
     
     
