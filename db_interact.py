@@ -243,6 +243,7 @@ class Connect_db:
             table_date_from = i[0]
             table_date_to = i[1]
 
+
             try:
                table_date_from = datetime.strptime(table_date_from,"%Y-%m-%d %H:%M:%S")
                table_date_to = datetime.strptime(table_date_to,"%Y-%m-%d %H:%M:%S")
@@ -253,11 +254,30 @@ class Connect_db:
 
             if(table_date_from > start_time and table_date_to < end_time):
                 count += 1
+
+
         
-              
+        start_time = start_time.strftime(self.time_format)
+        end_time = end_time.strftime(self.time_format)
 
 
-        return count
+        tup = [e_id,start_time,end_time,count]
+        return tup
+
+    def get_check_car_valid(self,reg,time):
+        self.curs.execute("SELECT employee_id FROM vehicle WHERE registration=?",(reg,))
+        e_id = self.curs.fetchone()
+        if e_id == None:
+            print("Car not in database")
+            return -1
+        else:
+            return self.get_colour_valid(e_id[0],time,time)
+
+            
+                
+        
+
+        
 
     
 
