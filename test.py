@@ -10,4 +10,4 @@ time = [["09:00"],["12:00"]]
 print(database.get_colour_valid(2,datetime.strptime("2019-06-26 09:00",database.time_format),datetime.strptime("2019-06-26 12:00",database.time_format)))
 print(database.get_roles())
 
-database.emp_book_week(1,"2019-W26",time)
+print(database.csv_total_bookings_emp_range(1,"2019-07-01","2019-07-07"))

@@ -232,6 +232,33 @@ class Connect_db:
 
             return dic
 
+    def csv_total_bookings_emp_range(self,e_id,date_from,date_to):
+        start_time = datetime.strptime(date_from + " 00:00",self.time_format)
+        end_time = datetime.strptime(date_to + " 00:00",self.time_format)
+
+        self.curs.execute("SELECT datetime_start,datetime_end FROM employee_timetable where employee_id=?",(e_id,))
+        tbl = self.curs.fetchall()
+        count = 0
+        for i in tbl:
+            table_date_from = i[0]
+            table_date_to = i[1]
+
+            try:
+               table_date_from = datetime.strptime(table_date_from,"%Y-%m-%d %H:%M:%S")
+               table_date_to = datetime.strptime(table_date_to,"%Y-%m-%d %H:%M:%S")
+            except ValueError:
+              table_date_from = datetime.strptime(table_date_from,"%d-%m-%Y %H:%M")
+              table_date_to = datetime.strptime(table_date_to,"%d-%m-%Y %H:%M")
+              pass
+
+            if(table_date_from > start_time and table_date_to < end_time):
+                count += 1
+        
+              
+
+
+        return count
+
     
 
 
