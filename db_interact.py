@@ -38,6 +38,18 @@ class Connect_db:
         self.connection.commit()
         print("Employee Added")
 
+    def emp_update(self,values = ()):
+        if values == ():
+            return
+        e_id = values[0]
+
+        
+
+        #self.curs.execute(query,values)
+        #self.connection.commit()
+        
+        
+
     def set_emp_password(self,employee_id,password_str):
         row = "password"
         query = "UPDATE employee SET password=? WHERE id=?"
@@ -110,6 +122,17 @@ class Connect_db:
 
         
 
+    def add_session(self,values=()):
+        if values == ():
+            print("Values is empty for creating a session")
+
+        self.curs.execute("INSERT INTO session VALUES (?,?,?,?)",values)
+        print("session added")
+        self.connection.commit()
+
+    def get_session_by_ip_token(self,ip,token):
+        self.curs.execute("SELECT * From session WHERE ip_address=? AND token=?",(ip,token,))
+        return self.curs.fetchone()
 
     
     
