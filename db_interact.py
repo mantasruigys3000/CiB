@@ -55,12 +55,13 @@ class Connect_db:
         
         
 
-    def set_emp_password(self,employee_id,password_str):
+    def set_emp_password(self,employee_id,password_str, salt):
         row = "password"
-        query = "UPDATE employee SET password=? WHERE id=?"
+        query = "UPDATE employee SET password=?,salt=? WHERE id=?"
 
-        self.curs.execute(query,(password_str,employee_id,))
-        self.connection.commit();
+        self.curs.execute(query,(password_str[0],str(salt),employee_id,))
+        self.connection.commit()
+        return True
 
 
     
@@ -220,6 +221,10 @@ class Connect_db:
                     print("Could not make booking not enough space")
             else:
                 print("Invalid Week")
+    def booking_details(self,):
+        self.curs.execute("SELECT * FROM employee_timetable")
+        bookings = self.curs.fetchall()
+        return bookings #not frontend use
 
 
     def get_roles(self):
@@ -262,7 +267,88 @@ class Connect_db:
 
 
         tup = [e_id,start_time,end_time,count]
+        newtup = [["Employee_id","Start_Time","End_Time","Count"]]
+        newtup.append(tup)
+        return newtup
+
+    def csv_total_bookings_emp_colour(self,colour):
+        self.curs.execute("SELECT id FROM employee WHERE parking_badge_colour=?",(colour,))
+        colour_emp = self.curs.fetchall()
+        count = 0
+        for i in colour_emp:
+            e_id = i[0]
+            self.curs.execute("SELECT employee_id FROM employee_timetable where employee_id=?",(e_id,))
+            emps_found = self.curs.fetchall()
+            if emps_found != None:
+                count += len(emps_found)
+
+        details = self.booking_details()
+        dic = []
+        dic.append(["Employee_ID","Colour","Time_From","Time_To","Vehicle_Registration"])
+
+        for i in details:
+            
+            self.curs.execute("SELECT parking_badge_colour FROM employee Where id=? ",(i[0],))
+            c = self.curs.fetchone()[0]
+            if c == colour:
+                lil_dic = []
+                lil_dic.append(i[0])
+                lil_dic.append(c)
+                lil_dic.append(i[1])
+                lil_dic.append(i[2])
+                lil_dic.append(i[3])
+                dic.append(lil_dic)
+
+            
+
+        tup = dic
         return tup
+
+    def csv_total_bookings(self):
+        #get colours
+        self.curs.execute("SELECT * FROM employee_timetable")
+        bookings = self.curs.fetchall()
+        dic = []
+        dic.append(["Employee_ID","Colour","Time_From","Time_To","Vehicle_Registration"])
+
+        for i in bookings:
+            lil_dic = []
+            lil_dic.append(i[0])
+            self.curs.execute("SELECT parking_badge_colour FROM employee Where id=? ",(i[0],))
+            col = self.curs.fetchone()[0]
+            lil_dic.append(col)
+            lil_dic.append(i[1])
+            lil_dic.append(i[2])
+            lil_dic.append(i[3])
+
+            dic.append(lil_dic)
+
+        return dic
+
+        
+
+    def csv_total_bookings_multi_colour(self,colours = []):
+        dic = []
+        dic.append(["Employee_ID","Colour","Time_From","Time_To","Vehicle_Registration"])
+        for c in colours:
+            tbl = self.csv_total_bookings_emp_colour(c)
+            for i in range(1,len(tbl)):
+                dic.append(tbl[i])
+        
+        return dic
+    
+    def csv_single_emp(self,e_id):
+        emp =  self.get_emp_ALL(e_id)
+        attributes = [0,1,2,5,6,7,8,9,10,11,12,13,14]
+        dic = []
+
+        for num in attributes:
+            dic.append(num)
+
+        return dic
+
+
+    
 
     def get_check_car_valid(self,reg,time):
         self.curs.execute("SELECT employee_id FROM vehicle WHERE registration=?",(reg,))
@@ -273,7 +359,9 @@ class Connect_db:
         else:
             return self.get_colour_valid(e_id[0],time,time)
 
-            
+    
+
+
                 
         
 
