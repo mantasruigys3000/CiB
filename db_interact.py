@@ -380,8 +380,7 @@ class Connect_db:
         self.curs.execute("SELECT employee_id FROM vehicle WHERE registration=?",(reg,))
         e_id = self.curs.fetchone()
         if e_id == None:
-            print("Car not in database")
-            return -1
+            return ("Car not in database")
         else:
             return self.get_colour_valid(e_id[0],time,time)
 
