@@ -369,7 +369,9 @@ class Connect_db:
 
 
 
-
+    def get_emp_bookings(self,id):
+        self.curs.execute("SELECT * FROM employee_timetable Where employee_id =?",(id,))
+        return self.curs.fetchall()
 
 
     

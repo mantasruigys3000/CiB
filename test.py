@@ -13,4 +13,6 @@ print(database.get_roles())
 #print(database.csv_total_bookings_emp_range(1,"2019-07-01","2019-07-07"))
 print(database.csv_multi_emp([1,2,3]))
 
-print(database.emp_book_week(1,"2019-W26",time))
+#print(database.emp_book_week(1,"2019-W26",time))
+
+print(database.get_emp_bookings(1))
