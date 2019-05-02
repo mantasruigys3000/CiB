@@ -203,6 +203,7 @@ class Connect_db:
         print(times)
         week = datetime.strptime(wk,"%Y-W%W-%w %H:%M")
         week -= dt.timedelta(days=7)
+        print(week)
         
 
         for l in range(len(times[0])):
@@ -217,15 +218,15 @@ class Connect_db:
             
 
             
-            if self.get_colour_valid(e_id,start_time,end_time):
-                if (self.get_parking_for_emp(e_id,start_time - dt.timedelta(days=1),end_time - dt.timedelta(days=1)) > 0):
+            if self.get_colour_valid(e_id,start_time + dt.timedelta(days=1),end_time + dt.timedelta(days=1)):
+                if (self.get_parking_for_emp(e_id,start_time ,end_time ) > 0):
                     self.add_booking((e_id,start_time,end_time))
                 else:
                     return "Could not make booking not enough space"
             else:
                 return "Invalid Week"
 
-            return True
+        return True
     def booking_details(self,):
         self.curs.execute("SELECT * FROM employee_timetable")
         bookings = self.curs.fetchall()
