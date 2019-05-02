@@ -385,9 +385,9 @@ class Connect_db:
         else:
             return self.get_colour_valid(e_id[0],time,time)
 
-    def write_csv(self,tbl):
+    def write_csv(self,tbl,name):
 
-        with open('person.csv', 'w',newline = '') as csvFile:
+        with open("Reports/"+name + ".csv", 'w',newline = '') as csvFile:
             writer = csv.writer(csvFile,lineterminator='\n')
             writer.writerows(tbl)
 
