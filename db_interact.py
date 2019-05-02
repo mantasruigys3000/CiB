@@ -1,6 +1,7 @@
 import sqlite3
 import datetime as dt
 from datetime import datetime
+import csv
 
 
 
@@ -383,6 +384,16 @@ class Connect_db:
             return ("Car not in database")
         else:
             return self.get_colour_valid(e_id[0],time,time)
+
+    def write_csv(self,tbl):
+
+        with open('person.csv', 'w',newline = '') as csvFile:
+            writer = csv.writer(csvFile,lineterminator='\n')
+            writer.writerows(tbl)
+
+        csvFile.close()
+
+    
 
     
 

@@ -16,3 +16,4 @@ print(database.csv_multi_emp([1,2,3]))
 #print(database.emp_book_week(1,"2019-W26",time))
 
 print(database.get_emp_bookings(1))
+database.write_csv(database.csv_total_bookings())
