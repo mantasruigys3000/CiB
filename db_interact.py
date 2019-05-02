@@ -202,6 +202,7 @@ class Connect_db:
         wk += ' 00:00'
         print(times)
         week = datetime.strptime(wk,"%Y-W%W-%w %H:%M")
+        week -= dt.timedelta(days=7)
         
 
         for l in range(len(times[0])):
@@ -209,13 +210,15 @@ class Connect_db:
             end_minutes = datetime.strptime(times[1][l],"%H:%M")
 
             current_week = week + dt.timedelta(days=l)
-
+            #current_week = week
             start_time = current_week + dt.timedelta(minutes=start_minutes.minute,hours=start_minutes.hour)
             end_time = current_week + dt.timedelta(minutes=end_minutes.minute,hours=end_minutes.hour)
 
             
+
+            
             if self.get_colour_valid(e_id,start_time,end_time):
-                if (self.get_parking_for_emp(e_id,start_time,end_time) > 0):
+                if (self.get_parking_for_emp(e_id,start_time - dt.timedelta(days=1),end_time - dt.timedelta(days=1)) > 0):
                     self.add_booking((e_id,start_time,end_time))
                 else:
                     return "Could not make booking not enough space"
@@ -343,11 +346,29 @@ class Connect_db:
         emp =  self.get_emp_ALL(e_id)
         attributes = [0,1,2,5,6,7,8,9,10,11,12,13]
         dic = []
-
+        dic.append(["Employee ID","First Name","Last Name","Department","Mobile No","Extention No","Type","Role","Blue Badge","PO CODE","Parking authorised","Badge Colour"])
+        lil_dic = []
         for num in attributes:
-            dic.append(emp[num])
+            
+            lil_dic.append(emp[num])
+            
+        dic.append(lil_dic)
 
         return dic
+
+    def csv_multi_emp(self,ids = []):
+
+        dic = []
+        dic.append(["Employee ID","First Name","Last Name","Department","Mobile No","Extention No","Type","Role","Blue Badge","PO CODE","Parking authorised","Badge Colour"])
+
+        for id in ids:
+            dic.append(self.csv_single_emp(id)[1])
+        
+        return dic
+
+
+
+
 
 
     
