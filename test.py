@@ -11,4 +11,4 @@ print(database.get_colour_valid(2,datetime.strptime("2019-06-26 09:00",database.
 print(database.get_roles())
 
 #print(database.csv_total_bookings_emp_range(1,"2019-07-01","2019-07-07"))
-print(database.csv_total_bookings_multi_colour(["Brown","Red"]))
+print(database.csv_single_emp(1))

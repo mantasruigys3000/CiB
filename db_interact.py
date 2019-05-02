@@ -218,9 +218,11 @@ class Connect_db:
                 if (self.get_parking_for_emp(e_id,start_time,end_time) > 0):
                     self.add_booking((e_id,start_time,end_time))
                 else:
-                    print("Could not make booking not enough space")
+                    return "Could not make booking not enough space"
             else:
-                print("Invalid Week")
+                return "Invalid Week"
+
+            return True
     def booking_details(self,):
         self.curs.execute("SELECT * FROM employee_timetable")
         bookings = self.curs.fetchall()
@@ -339,11 +341,11 @@ class Connect_db:
     
     def csv_single_emp(self,e_id):
         emp =  self.get_emp_ALL(e_id)
-        attributes = [0,1,2,5,6,7,8,9,10,11,12,13,14]
+        attributes = [0,1,2,5,6,7,8,9,10,11,12,13]
         dic = []
 
         for num in attributes:
-            dic.append(num)
+            dic.append(emp[num])
 
         return dic
 
